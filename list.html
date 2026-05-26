@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Today's Intentions</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body{
+      background:#f7ebdd;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:60px 20px;
+      color:#2b1b12;
+    }
+
+    .container{
+      width:100%;
+      max-width:700px;
+    }
+
+    .top-text{
+      font-size:12px;
+      letter-spacing:3px;
+      color:#6d5a4f;
+      margin-bottom:10px;
+    }
+
+    h1{
+      font-size:70px;
+      font-family: "Georgia", serif;
+      font-style: italic;
+      font-weight:500;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      font-size:26px;
+      color:#6b5b52;
+      margin-bottom:40px;
+    }
+
+    .todo-box{
+      background:#fff;
+      border-radius:22px;
+      padding:25px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .input-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid #ddd;
+      padding-bottom:20px;
+      margin-bottom:20px;
+    }
+
+    .input-row input{
+      border:none;
+      outline:none;
+      width:75%;
+      font-size:22px;
+      background:transparent;
+      color:#333;
+    }
+
+    .add-btn{
+      background:#5b2314;
+      color:white;
+      border:none;
+      padding:14px 28px;
+      border-radius:40px;
+      font-size:18px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .add-btn:hover{
+      background:#3f170d;
+    }
+
+    .bottom-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:15px;
+    }
+
+    select{
+      padding:10px 18px;
+      border:none;
+      border-radius:20px;
+      background:#f3ede7;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    .priority{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .tag{
+      padding:8px 16px;
+      border-radius:20px;
+      font-size:14px;
+      background:#f5f5f5;
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+    }
+
+    .green{ background:green; }
+    .orange{ background:orange; }
+    .red{ background:red; }
+
+    .filters{
+      margin-top:30px;
+      display:flex;
+      gap:15px;
+    }
+
+    .filter-btn{
+      border:none;
+      padding:10px 18px;
+      border-radius:20px;
+      background:#efe5d8;
+      cursor:pointer;
+      font-size:15px;
+    }
+
+    .active{
+      background:white;
+      box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .empty{
+      text-align:center;
+      margin-top:100px;
+      font-size:28px;
+      font-family:"Georgia", serif;
+      font-style:italic;
+      color:#7a6a61;
+    }
+
+    ul{
+      list-style:none;
+      margin-top:25px;
+    }
+
+    li{
+      background:#fff;
+      margin-top:15px;
+      padding:16px 20px;
+      border-radius:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .delete{
+      background:red;
+      color:white;
+      border:none;
+      padding:8px 14px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <p class="top-text">YOUR DAY, FOCUSED</p>
+
+    <h1>Today's intentions</h1>
+
+    <p class="subtitle">All clear. Breathe.</p>
+
+    <div class="todo-box">
+
+      <div class="input-row">
+        <input type="text" id="taskInput" placeholder="What needs doing?">
+        <button class="add-btn" onclick="addTask()">+ Add</button>
+      </div>
+
+      <div class="bottom-row">
+
+        <select>
+          <option>Personal</option>
+          <option>Work</option>
+          <option>Study</option>
+        </select>
+
+        <div class="priority">
+          <div class="tag">
+            <span class="dot green"></span> Low
+          </div>
+
+          <div class="tag">
+            <span class="dot orange"></span> Medium
+          </div>
+
+          <div class="tag">
+            <span class="dot red"></span> High
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Active</button>
+      <button class="filter-btn">Done</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <div class="empty" id="emptyText">
+      Nothing here yet.
+    </div>
+
+  </div>
+
+  <script>
+
+    function addTask(){
+
+      let input = document.getElementById("taskInput");
+      let taskText = input.value.trim();
+
+      if(taskText === ""){
+        alert("Enter a task");
+        return;
+      }
+
+      let li = document.createElement("li");
+
+      li.innerHTML = `
+        <span>${taskText}</span>
+        <button class="delete">Delete</button>
+      `;
+
+      li.querySelector(".delete").addEventListener("click", function(){
+        li.remove();
+
+        if(document.querySelectorAll("#taskList li").length === 0){
+          document.getElementById("emptyText").style.display = "block";
+        }
+      });
+
+      document.getElementById("taskList").appendChild(li);
+
+      input.value = "";
+
+      document.getElementById("emptyText").style.display = "none";
+    }
+
+  </script>
+
+</body>
+</html>
